@@ -1,0 +1,4 @@
+---
+
+ ansible_user                 : ubuntu
+ ansible_ssh_private_key_file : /home/ubuntu/.ssh/ip-18-198-25-9.pem

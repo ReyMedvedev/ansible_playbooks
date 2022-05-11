@@ -1,0 +1,45 @@
+
+---
+- name: Install Apache and upload my web page
+  hosts: all
+  become: yes
+
+  vars:
+    source_file: ./my_web_site/index.html
+    destin_file: /var/www/html
+
+  tasks:
+  - block: # Block for RedHat
+
+     - name: Install Apache Web Server for RedHat/CentOS
+       yum: name=httpd state=latest
+
+     - name: Copy MyHomePage to Servers
+       copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+       notify: Restart Apache RedHat
+
+     - name: Start Web Server service for RedHat/CentOS
+       service: name=httpd state=started enabled=yes
+       
+    when: ansible_os_family == "RedHat"
+
+  - block: # Block for Debian
+
+     - name: Install Apache Web Server for Ubuntu/Debian
+       apt: name=apache2 state=latest
+
+     - name: Copy MyHomePage to Servers
+       copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+       notify: Restart Apache Debian
+
+     - name: Start Web Server service for Ubuntu/Debian
+       service: name=apache2 state=started enabled=yes
+       
+    when: ansible_os_family == "Debian"
+
+  handlers:
+  - name: Restart Apache RedHat
+    service: name=httpd state=restarted
+
+  - name: Restart Apache Debian
+    service: name=apache2 state=restarted
