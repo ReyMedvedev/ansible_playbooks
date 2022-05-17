@@ -1,0 +1,11 @@
+
+---
+- name: Install Apache and upload my web page
+  hosts: all
+  become: yes
+
+  roles:
+    - deploy_apache_web
+#   - { role: deploy_apache_web, when: ansible_system == 'Linux' }
+
+# main project in folder exaxmple_with_roles
